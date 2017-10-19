@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findWorld.dao.UserDao">
+	<!--设置bean类和数据库中表的字段一一对应，注意数据库字段和bean类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.findWorld.bean.User">
+		<id column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="USER_PASSWORD" property="userPassword"
+			jdbcType="VARCHAR" />
+		<result column="USER_EMAIL" property="userEmail" jdbcType="VARCHAR" />
+		<result column="LOGIN_TIME" property="loginTime" jdbcType="VARCHAR" />
+		<result column="REGISTER_TIME" property="registerTime"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 查询单条记录 -->
+	<select id="selectUserById" parameterType="int" resultMap="BaseResultMap">
+		SELECT * FROM t_user WHERE USER_ID = #{userId}
+	</select>
+	
+	<!-- 用户登录 -->
+	<select id="login" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT * FROM t_user
+		WHERE
+		USER_NAME = #{userName,jdbcType=VARCHAR}
+		AND USER_PASSWORD = #{userPassword,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 修改登录时间 -->
+	<update id="updateLoginTime"  parameterType="java.lang.String">
+		UPDATE t_user SET LOGIN_TIME =#{loginTime,jdbcType=VARCHAR} 
+		WHERE USER_NAME=#{userName,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 修改密码 -->
+	<update id="updatePwd"  parameterType="java.lang.String">
+		UPDATE t_user SET USER_PASSWORD =#{userPassword,jdbcType=VARCHAR}
+		WHERE USER_NAME=#{userName,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 查询用户名是否已注册，登录校验是否注册过 -->
+	<select id="getManageUserCount" parameterType="java.lang.String"  resultType="java.lang.Integer">
+		SELECT count(*) FROM t_user WHERE USER_NAME = #{userName,jdbcType=VARCHAR}
+	</select>
+</mapper>  
